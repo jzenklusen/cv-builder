@@ -8,7 +8,6 @@ const nextConfig: NextConfig = {
         fs: false,
       };
     }
-    // Add transpilation configuration
     config.module = {
       ...config.module,
       rules: [
@@ -18,12 +17,16 @@ const nextConfig: NextConfig = {
           resolve: {
             fullySpecified: false
           }
+        },
+        {
+          test: /html2pdf\.js$/,
+          type: 'javascript/auto'
         }
       ]
     };
     return config;
   },
-  transpilePackages: ["react-speech-recognition", "regenerator-runtime"],
+  transpilePackages: ["react-speech-recognition", "regenerator-runtime", "html2pdf.js"],
 };
 
 export default nextConfig;
