@@ -6,6 +6,7 @@ import SpeechRecognition, { useSpeechRecognition } from 'react-speech-recognitio
 export const useVoiceRecording = () => {
   const [isRecording, setIsRecording] = useState(false);
   const [isBrowserSupported, setIsBrowserSupported] = useState(false);
+  const [isClient, setIsClient] = useState(false);
 
   const {
     transcript,
@@ -22,6 +23,21 @@ export const useVoiceRecording = () => {
   useEffect(() => {
     console.log('Transcript updated:', transcript);
   }, [transcript]);
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
+
+  if (!isClient) {
+    return {
+      isRecording: false,
+      transcript: '',
+      browserSupportsSpeechRecognition: false,
+      startRecording: () => {},
+      stopRecording: () => {},
+      resetRecording: () => {},
+    };
+  }
 
   const startRecording = () => {
     if (isBrowserSupported) {
