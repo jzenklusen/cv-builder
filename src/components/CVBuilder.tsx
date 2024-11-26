@@ -6,18 +6,7 @@ import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
-import { Textarea } from "@/components/ui/textarea"
 import { Mic, Square, RotateCcw, Plus, FileDown, Wand2, Briefcase, Edit, Zap, TrendingUp, BarChart, Trash2 } from "lucide-react"
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog"
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
-import { Label } from "@/components/ui/label"
 import { CVData } from "@/types/cv"
 import { enhanceText } from '@/services/openai';
 import { EditDialog } from '@/components/EditDialog';
