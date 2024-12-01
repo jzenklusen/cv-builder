@@ -11,94 +11,66 @@ const openai = new OpenAI({
 });
 
 const SECTION_PROMPTS = {
-  experience: `Eres un redactor profesional de CV con experiencia en transcribir información verbal a datos estructurados de CV. Dada la siguiente descripción verbal de la experiencia laboral de alguien, crea un objeto JSON bien estructurado y profesional con los siguientes campos:
-  - **jobTitle:** El título oficial del puesto (ej., "Ingeniero de Software").
-  - **company:** El nombre exacto de la empresa (ej., "Procter and Gamble").
-  - **startDate:** Fecha de inicio del empleo (ej., "Enero 2020").
-  - **endDate:** Fecha de finalización del empleo o "Presente" si está empleado actualmente.
-  - **location:** Ciudad y país del empleo (ej., "Madrid, España").
-  - **responsibilities:** Un array de 3-4 puntos detallando responsabilidades y logros clave.
+  experience: `Eres un redactor profesional de CV con experiencia en transcribir información verbal a datos estructurados de CV. 
+Por favor, convierte la siguiente descripción verbal de experiencia laboral en un objeto JSON con TODOS estos campos obligatorios:
 
-**Ejemplo:**
-
-# Input:
-Trabajé como Desarrollador Senior en Procter and Gamble desde marzo 2018 hasta junio 2021 en Madrid. Lideré un equipo de 5 desarrolladores, implementé nuevas funcionalidades que aumentaron la participación de usuarios en un 20%, y optimicé procesos backend para reducir costos de servidor en un 15%.
-
-# Output JSON:
 {
-  "jobTitle": "Desarrollador Senior",
-  "company": "Procter and Gamble",
-  "startDate": "Marzo 2018",
-  "endDate": "Junio 2021",
-  "location": "Madrid, España",
-  "responsibilities": [
-    "Lideré un equipo de 5 desarrolladores para entregar soluciones de software de alta calidad.",
-    "Implementé nuevas funcionalidades que aumentaron la participación de usuarios en un 20%.",
-    "Optimicé procesos backend para reducir costos de servidor en un 15%."
-  ]
+  "jobTitle": "título del puesto",
+  "company": "nombre de la empresa",
+  "startDate": "fecha de inicio (ej: Enero 2020)",
+  "endDate": "fecha de fin o 'Presente'",
+  "location": "ubicación",
+  "responsibilities": ["responsabilidad 1", "responsabilidad 2", ...]
 }
 
-# Ahora, procesa la siguiente entrada:
+Si algún dato no está especificado en la entrada, usa un valor por defecto apropiado.
+Si no puedes entender alguna parte, indica "por especificar" en ese campo.
+IMPORTANTE: SIEMPRE debes devolver un objeto JSON válido con TODOS los campos mencionados.
 
-# Input:
+Entrada del usuario:
 {{text}}
 
-# Output JSON:`,
+Respuesta (solo JSON):`,
 
-  education: `Eres un redactor profesional de CV. Dada una descripción verbal de la educación de alguien, crea un objeto JSON bien estructurado y profesional con los siguientes campos:
-  - **degree:** Nombre del título (ej., "Grado en Ingeniería Informática").
-  - **university:** Nombre de la universidad (ej., "Universidad Complutense de Madrid").
-  - **graduationYear:** Año de graduación (ej., "2022").
-  - **gpa:** Nota media si se menciona (ej., "8.5/10").
+  education: `Eres un redactor profesional de CV con experiencia en transcribir información verbal a datos estructurados.
+Por favor, convierte la siguiente descripción verbal de educación en un objeto JSON con TODOS estos campos obligatorios:
 
-**Ejemplo:**
-
-# Input:
-Obtuve mi Grado en Ingeniería Informática de la Universidad Complutense de Madrid en 2022 con una nota media de 8.5/10.
-
-# Output JSON:
 {
-  "degree": "Grado en Ingeniería Informática",
-  "university": "Universidad Complutense de Madrid",
-  "graduationYear": "2022",
-  "gpa": "8.5/10"
+  "degree": "nombre del título",
+  "university": "nombre de la universidad",
+  "graduationYear": "año de graduación",
+  "gpa": "promedio (si se menciona)"
 }
 
-# Ahora, procesa la siguiente entrada:
+Si algún dato no está especificado en la entrada, usa un valor por defecto apropiado.
+Si no puedes entender alguna parte, indica "por especificar" en ese campo.
+IMPORTANTE: SIEMPRE debes devolver un objeto JSON válido con TODOS los campos mencionados.
 
-# Input:
+Entrada del usuario:
 {{text}}
 
-# Output JSON:`,
+Respuesta (solo JSON):`,
 
-  skills: `Eres un redactor profesional de CV. Dada una descripción verbal de las habilidades, idiomas y aficiones de alguien, organízalos en categorías estructuradas. Crea un objeto JSON bien formateado con los siguientes campos:
-  - **technical:** Un array de habilidades técnicas (ej., ["JavaScript", "React", "Node.js"]).
-  - **languages:** Un array de idiomas con niveles de competencia (ej., [{"language": "Español", "proficiency": "Nativo"}, {"language": "Inglés", "proficiency": "Intermedio"}]).
-  - **hobbies:** Un array de aficiones e intereses (ej., ["Fotografía", "Ciclismo"]).
+  skills: `Eres un redactor profesional de CV con experiencia en transcribir información verbal a datos estructurados.
+Por favor, convierte la siguiente descripción verbal de habilidades en un objeto JSON con TODOS estos campos obligatorios:
 
-**Ejemplo:**
-
-# Input:
-Tengo experiencia en JavaScript, React y Node.js. Hablo español (nativo) e inglés (intermedio). En mi tiempo libre, disfruto de la fotografía y el ciclismo.
-
-# Output JSON:
 {
-  "technical": ["JavaScript", "React", "Node.js"],
+  "technical": ["habilidad1", "habilidad2", ...],
   "languages": [
-    { "language": "Español", "proficiency": "Nativo" },
-    { "language": "Inglés", "proficiency": "Intermedio" }
+    {"language": "idioma1", "proficiency": "nivel1"},
+    {"language": "idioma2", "proficiency": "nivel2"}
   ],
-  "hobbies": ["Fotografía", "Ciclismo"]
+  "hobbies": ["hobby1", "hobby2", ...]
 }
 
-# Ahora, procesa la siguiente entrada:
+Si no se mencionan habilidades de algún tipo, usa un array vacío.
+IMPORTANTE: SIEMPRE debes devolver un objeto JSON válido con TODOS los campos mencionados.
 
-# Input:
+Entrada del usuario:
 {{text}}
 
-# Output JSON:`,
+Respuesta (solo JSON):`,
 };
-
 
 const SUMMARY_PROMPT = `Eres un redactor profesional de CV con experiencia en crear resúmenes ejecutivos impactantes. 
 Dada la siguiente información estructurada de un CV, crea un resumen profesional conciso (máximo 4 líneas) que destaque:
@@ -139,17 +111,12 @@ export const generateCVSummary = async (cvData: CVData): Promise<string> => {
     }
   };
 
-
-
 export const enhanceText = async (
   text: string,
   section: 'experience' | 'education' | 'skills'
 ): Promise<any> => {
   if (!text.trim()) {
-    console.error('Empty text provided to enhanceText');
-    return section === 'skills'
-      ? { technical: [], languages: [], hobbies: [] }
-      : {};
+    throw new Error('No se proporcionó texto para procesar');
   }
 
   try {
@@ -157,37 +124,43 @@ export const enhanceText = async (
       messages: [
         { 
           role: 'system', 
-          content: SECTION_PROMPTS[section] + '\nIMPORTANT: Respond only with valid JSON.' 
-        },
-        { role: 'user', content: text },
+          content: SECTION_PROMPTS[section].replace('{{text}}', text)
+        }
       ],
       model: 'gpt-4-turbo-preview',
       response_format: { type: 'json_object' },
+      temperature: 0.5, // Reducimos la creatividad para respuestas más consistentes
     });
 
     const content = completion.choices[0].message.content || '{}';
-    const result = JSON.parse(content);
-
-/////////////////////////////////////////////////////////
-
-    const requiredFields = {
-      experience: ['jobTitle', 'company', 'startDate', 'endDate', 'location', 'responsibilities'],
-      education: ['degree', 'university', 'graduationYear', 'gpa'],
-      skills: ['technical', 'languages', 'hobbies'],
-    };
-
-    const missingFields = requiredFields[section].filter(
-      (field) => !(field in result)
-    );
-
-    if (missingFields.length > 0) {
-      throw new Error(`Missing fields in AI response: ${missingFields.join(', ')}`);
+    let result;
+    
+    try {
+      result = JSON.parse(content);
+    } catch (e) {
+      console.error('Error parsing OpenAI response:', content);
+      throw new Error('La respuesta no es un JSON válido');
     }
 
-    console.log(`Enhanced ${section} result:`, result);
+    // Validación específica por sección
+    if (section === 'experience') {
+      if (!result.jobTitle || !result.company || !result.startDate || 
+          !result.endDate || !result.location || !Array.isArray(result.responsibilities)) {
+        throw new Error('Respuesta incompleta para experiencia laboral');
+      }
+    } else if (section === 'education') {
+      if (!result.degree || !result.university || !result.graduationYear) {
+        throw new Error('Respuesta incompleta para educación');
+      }
+    } else if (section === 'skills') {
+      if (!Array.isArray(result.technical) || !Array.isArray(result.languages) || !Array.isArray(result.hobbies)) {
+        throw new Error('Respuesta incompleta para habilidades');
+      }
+    }
+
     return result;
   } catch (error) {
-    console.error('Error enhancing text:', error);
-    throw error;
+    console.error('Error en enhanceText:', error);
+    throw new Error('No se pudo procesar el texto. Por favor, intenta ser más específico.');
   }
 };

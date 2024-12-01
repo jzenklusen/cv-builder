@@ -24,6 +24,10 @@ interface Education {
       location: string;
       email: string;
       nationalities: string;
+      phone?: string;
+      github?: string;
+      linkedin?: string;
+      personalSite?: string;
     };
     summary: string;
     experience: any[];
