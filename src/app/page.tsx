@@ -1,12 +1,11 @@
-"use client"
-
-import dynamic from 'next/dynamic'
-
-const CVBuilderWithNoSSR = dynamic(
-  () => import('@/components/CVBuilder'),
-  { ssr: false }
-)
+import CVBuilder from "@/components/CVBuilder";
+import { Header } from "@/components/ui/header";
 
 export default function Home() {
-  return <CVBuilderWithNoSSR />
+  return (
+    <>
+      <Header />
+      <CVBuilder />
+    </>
+  );
 }

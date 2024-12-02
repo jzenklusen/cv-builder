@@ -43,7 +43,10 @@ export const useVoiceRecording = () => {
     if (isBrowserSupported) {
       setIsRecording(true);
       resetTranscript();
-      SpeechRecognition.startListening({ continuous: true });
+      SpeechRecognition.startListening({
+        continuous: true,
+        language: process.env.NEXT_PUBLIC_INPUT_LANGUAGE,
+      });
       console.log('Started recording...');
     } else {
       console.error('Browser does not support speech recognition.');
