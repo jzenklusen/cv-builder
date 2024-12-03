@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Card } from "./ui/card";
 import { EditDialog } from "./EditDialog";
 import { Button } from "./ui/button";
-import { FileText, Trash2 } from "lucide-react";
+import { FileText, Sparkles, Trash2 } from "lucide-react";
 import dynamic from "next/dynamic";
 import {
   AlertDialog,
@@ -49,8 +49,6 @@ export const OutputsPanel = ({
   handleEditEducation,
   handleDeleteEducation,
   handleEditSkills,
-  showJobSuggestions,
-  handleTextSelection,
 }: OutputsPanelProps) => {
   const [showDeleteDialog, setShowDeleteDialog] = useState<{
     type: "experience" | "education" | null;
@@ -107,9 +105,8 @@ export const OutputsPanel = ({
           Tu CV está vacío
         </h2>
         <p className="text-gray-500 text-center max-w-md">
-          Responde las preguntas en el panel izquierdo para comenzar a crear tu
-          CV. Las secciones se irán mostrando automáticamente a medida que
-          agregues información.
+          Comienza respondiendo las preguntas para comenzar a crear tu
+          currículo.
         </p>
       </Card>
     );
@@ -150,10 +147,10 @@ export const OutputsPanel = ({
       {/* About Me Section */}
       {canShowSummary && (
         <div className="mb-4 group relative">
-          <h2 className="text-2xl font-bold text-black border-b border-gray-600 mb-2">
-            About me
+          <h2 className="text-2xl font-bold text-black border-b border-gray-600 pb-2">
+            Sobre mí
           </h2>
-          <div className="relative">
+          <div className="relative mt-4">
             <div className="absolute right-0 top-0 opacity-0 group-hover:opacity-100 transition-opacity flex gap-2">
               {hasSummary && (
                 <EditDialog
@@ -170,18 +167,19 @@ export const OutputsPanel = ({
                 onClick={handleGenerateSummary}
                 disabled={isGeneratingSummary}
               >
+                <Sparkles className="w-4 h-4 mr-2" />
                 {isGeneratingSummary
-                  ? "Generating..."
+                  ? "Generando..."
                   : hasSummary
-                  ? "Regenerate"
-                  : "Generate with AI"}
+                  ? "Regenerar"
+                  : "Generar con IA"}
               </Button>
             </div>
             {hasSummary ? (
               <p className="text-gray-700 w-full">{cvData.summary}</p>
             ) : (
               <p className="text-gray-500 italic">
-                Click "Generate with AI" to create your professional summary
+                Haz click en "Generar con IA" para crear tu resumen profesional
               </p>
             )}
           </div>
@@ -191,16 +189,12 @@ export const OutputsPanel = ({
       {/* Work Experience Section */}
       {hasExperience && (
         <div className="mb-4">
-          <h2 className="text-2xl font-bold text-black border-b border-gray-600 mb-2">
-            Work Experience
+          <h2 className="text-2xl font-bold text-black border-b border-gray-600 pb-2">
+            Experiencia Profesional
           </h2>
           <Droppable droppableId="experience-output" type="experience">
             {(provided) => (
-              <div
-                className="space-y-2"
-                {...provided.droppableProps}
-                ref={provided.innerRef}
-              >
+              <div {...provided.droppableProps} ref={provided.innerRef}>
                 {cvData.experience.map((exp: any, index: number) => (
                   <Draggable
                     key={index}
@@ -272,16 +266,12 @@ export const OutputsPanel = ({
       {/* Education Section */}
       {hasEducation && (
         <div className="mb-4">
-          <h2 className="text-2xl font-bold text-black border-b border-gray-600 mb-2">
-            Education
+          <h2 className="text-2xl font-bold text-black border-b border-gray-600 pb-2">
+            Educación
           </h2>
           <Droppable droppableId="education-output" type="education">
             {(provided) => (
-              <div
-                className="space-y-2"
-                {...provided.droppableProps}
-                ref={provided.innerRef}
-              >
+              <div {...provided.droppableProps} ref={provided.innerRef}>
                 {cvData.education.map((edu: any, index: number) => (
                   <Draggable
                     key={index}
@@ -342,27 +332,27 @@ export const OutputsPanel = ({
       {/* Skills Section */}
       {hasSkills && (
         <div className="mb-4 group relative">
-          <h2 className="text-2xl font-bold text-black border-b border-gray-600 mb-2">
-            Skills, Language, Hobbies & Projects
+          <h2 className="text-2xl font-bold text-black border-b border-gray-600 pb-2">
+            Habilidades, Idiomas y Hobbies
           </h2>
           <div className="relative">
-            <div className="absolute right-0 top-0 opacity-0 group-hover:opacity-100 transition-opacity">
+            <div className="absolute right-4 top-4 opacity-0 group-hover:opacity-100 transition-opacity">
               <EditDialog
                 title="Skills"
                 content={cvData.skills}
                 onSave={handleEditSkills}
               />
             </div>
-            <div className="space-y-2">
-              <div>
-                <h3 className="font-bold mb-1">Skills:</h3>
-                <p className="text-gray-700">
+            <div className="space-y-2 p-4">
+              <ul>
+                <li className="font-bold mb-1">Habilidades:</li>
+                <li className="text-gray-700 list-disc ml-4">
                   {cvData.skills.technical.join(", ")}
-                </p>
-              </div>
-              <div>
-                <h3 className="font-bold mb-1">Language:</h3>
-                <p className="text-gray-700">
+                </li>
+              </ul>
+              <ul>
+                <li className="font-bold mb-1">Idiomas:</li>
+                <li className="text-gray-700 list-disc ml-4">
                   {cvData.skills.languages
                     .map((lang: any) =>
                       typeof lang === "string"
@@ -370,14 +360,14 @@ export const OutputsPanel = ({
                         : `${lang.language} (${lang.proficiency})`
                     )
                     .join(", ")}
-                </p>
-              </div>
-              <div>
-                <h3 className="font-bold mb-1">Hobbies:</h3>
-                <p className="text-gray-700">
+                </li>
+              </ul>
+              <ul>
+                <li className="font-bold mb-1">Hobbies:</li>
+                <li className="text-gray-700 list-disc ml-4">
                   {cvData.skills.hobbies.join(", ")}
-                </p>
-              </div>
+                </li>
+              </ul>
             </div>
           </div>
         </div>
